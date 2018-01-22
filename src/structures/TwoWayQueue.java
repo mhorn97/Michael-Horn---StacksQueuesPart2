@@ -18,14 +18,12 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 	@Override
 	public T dequeueFirst()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public T dequeueLast()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
