@@ -89,5 +89,99 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
+	/**
+	 * Class that represents a node for linked list for the Stack class
+	 * 
+	 * @author Michael Horn
+	 * @version 1.0
+	 */
+	private class TwoWayNode
+	{
+		public T data;
+		public TwoWayNode next;
+		public TwoWayNode previous;
+
+		/**
+		 * Stack Node object that contains data and a reference to the next node in the
+		 * linked list
+		 * 
+		 * @param data
+		 *            element that is unknown until the stack is created
+		 * @param next
+		 *            reference to the next node
+		 */
+		public TwoWayNode(T data, TwoWayNode next, TwoWayNode previous)
+		{
+			this.data = data;
+			this.next = next;
+			this.previous = previous;
+		}
+
+		/**
+		 * Able to set the data of the node
+		 * 
+		 * @param element
+		 *            to be placed into the node
+		 */
+		public void setData(T element)
+		{
+			this.data = element;
+		}
+
+		/**
+		 * Changes the reference of the node
+		 * 
+		 * @param the
+		 *            reference to a node
+		 */
+		public void setNext(TwoWayNode next)
+		{
+			this.next = next;
+		}
+
+		/**
+		 * Returns the reference to the next node
+		 * 
+		 * @return reference to next node
+		 */
+		
+		public void setPrevious(TwoWayNode prev)
+		{
+			this.previous = previous;
+		}
+		
+		public TwoWayNode getPrevious()
+		{
+			return previous;
+		}
+		
+		public TwoWayNode getNext()
+		{
+			return next;
+		}
+
+		/**
+		 * Returns the data of the current node
+		 * 
+		 * @return element/data of current node
+		 */
+		public T getData()
+		{
+			return data;
+		}
+
+		/**
+		 * Returns the to string of the data of the current node
+		 * 
+		 * @return tostring of the data of the current node
+		 */
+		public String toString()
+		{
+			return data.toString();
+		}
+	}
+
 
 }
