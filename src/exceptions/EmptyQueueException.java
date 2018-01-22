@@ -9,7 +9,7 @@ package exceptions;
  * @author Michael Horn
  *
  */
-public class EmptyQueueException extends Exception
+public class EmptyQueueException extends RuntimeException
 {
 
 }

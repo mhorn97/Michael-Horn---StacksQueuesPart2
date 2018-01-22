@@ -8,6 +8,7 @@ package structures;
 import java.util.Iterator;
 import java.util.List;
 
+
 /**
  * @author Michael Horn
  *
@@ -15,6 +16,17 @@ import java.util.List;
 public class TwoWayQueue<T> implements ITwoWayQueue<T>
 {
 
+	TwoWayNode head;
+	private int modCount;
+
+	/**
+	 * Stack stores a head object for itself which is null when initialized
+	 */
+	public TwoWayQueue()
+	{
+		this.head = new TwoWayNode(null, null,null);
+	}
+	
 	@Override
 	public T dequeueFirst()
 	{
