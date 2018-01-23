@@ -5,8 +5,15 @@
  */
 package structures;
 
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
+
+import exceptions.EmptyQueueException;
+
+
+
 
 
 /**
@@ -24,82 +31,238 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 	 */
 	public TwoWayQueue()
 	{
-		this.head = new TwoWayNode(null, null,null);
+		this.head = new TwoWayNode(null, null, null);
 	}
 	
 	@Override
 	public T dequeueFirst()
-	{
-		return null;
+	{	
+		if(isEmpty())
+		{
+			throw new EmptyQueueException();
+		}
+		T current = head.getData();
+		if(head.getNext() != null)
+		{
+			head = head.next;
+		}
+		return current;
 	}
 
 	@Override
 	public T dequeueLast()
 	{
-		return null;
+		modCount++;
+		TwoWayNode current = head;
+		T returnElement;
+
+		if (isEmpty())
+		{
+			throw new EmptyQueueException();
+		}
+
+		if (current.next == null)
+		{
+			returnElement = head.getData();
+			head.setData(null);
+			return returnElement;
+		} else
+		{
+			while (current.next.getNext() != null)
+			{
+				current = current.next;
+			}
+
+			returnElement = current.next.getData();
+			current.setNext(null);
+			return returnElement;
+		}
 	}
 
 	@Override
 	public List<T> dequeueAll()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(isEmpty())
+		{
+			throw new EmptyQueueException();
+		}
+		TwoWayNode current = head;
+		ArrayList<T> list = new ArrayList<>();
+		while(current.getNext() != null)
+		{
+			list.add(current.getData());
+			current = current.next;
+		}
+		head = new TwoWayNode(null,null,null);
+		return list;
 	}
 
 	@Override
 	public void enqueueFirst(T element)
 	{
-		// TODO Auto-generated method stub
-		
+		if (head.getData() == null)
+		{
+			head = new TwoWayNode(element, null, null);
+		} else
+		{
+			TwoWayNode secondHead = new TwoWayNode(head.getData(), head.getNext(), head);
+			head.setData(element);
+			head.setNext(secondHead);
+		}
 	}
 
 	@Override
 	public void enqueueLast(T element)
 	{
-		// TODO Auto-generated method stub
+		if (head.getData() == null)
+		{
+			head = new TwoWayNode(element, null, null);
+			System.out.println("head: " + head.getData());
+		} else
+		{
+			TwoWayNode current = head;
+			while (current.next != null)
+			{
+				System.out.println("Current: " + current.getData());
+				current = current.next;
+			}
+			System.out.println("DONE");
+			current.next = new TwoWayNode(element, null, null);
+		}
+		modCount++;
 		
 	}
 
 	@Override
 	public void enqueueAllFirst(T[] elements)
 	{
-		// TODO Auto-generated method stub
+		for (T element : elements)
+		{
+			enqueueFirst(element);
+		}
+		modCount++;
 		
 	}
 
 	@Override
 	public void enqueueAllLast(T[] elements)
 	{
-		// TODO Auto-generated method stub
+		for (T element : elements)
+		{
+			enqueueLast(element);
+		}
+		modCount++;
 		
 	}
 
 	@Override
 	public int size()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int counter = 0;
+		TwoWayNode current = head;
+		
+		if (head.getData() == null)
+		{
+			return 0;
+		}
+		
+		if (current.getData() != null)
+		{
+			counter++;
+		}
+		
+		while (current.next != null)
+		{
+			current = current.next;
+			counter++;
+		}
+		
+		return counter;
 	}
 
 	@Override
 	public boolean isEmpty()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		if (head.getData() == null)
+		{
+			return true;
+		} else
+		{
+			return false;
+		}
 	}
 
 	@Override
 	public void clear()
 	{
-		// TODO Auto-generated method stub
+		head.setData(null);
+		head.setNext(null);
 		
 	}
 
 	@Override
 	public Iterator<T> iterator()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new TwoWayQueueIterator(head, modCount);
+	}
+	
+	private class TwoWayQueueIterator implements Iterator<T>
+	{
+
+		TwoWayNode head;
+		int savedModCount;
+
+		/**
+		 * Stack iterator object that keeps track of its own head node
+		 * @param head node that is the start of the linked list
+		 * @param savedModCount the count of times the linked list was manipulated
+		 */
+		public TwoWayQueueIterator(TwoWayNode head, int savedModCount)
+		{
+			this.savedModCount = savedModCount;
+			this.head = head;
+		}
+
+		/**
+		 * Checks if the stack has a next iteration by checking if the next node has
+		 * data or not
+		 * @return if the iterator can do the next method again
+		 */
+		@Override
+		public boolean hasNext()
+		{
+			if (savedModCount != TwoWayQueue.this.modCount)
+			{
+				throw new ConcurrentModificationException();
+			}
+			
+			if (head.getData() == null)
+			{
+				return false;
+			} else
+			{
+				return head.getNext() != null;
+			}
+		}
+
+		/**
+		 * Returns the data of the next node in the stack
+		 * 
+		 * @return the data in the next part of the stack
+		 */
+		@Override
+		public T next()
+		{
+			if (savedModCount != TwoWayQueue.this.modCount)
+			{
+				throw new ConcurrentModificationException();
+			}
+			
+			T data = head.getData();
+			head = head.next;
+			return data;
+		}
+
 	}
 	
 	
@@ -159,7 +322,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		 * @return reference to next node
 		 */
 		
-		public void setPrevious(TwoWayNode prev)
+		public void setPrevious(TwoWayNode previous)
 		{
 			this.previous = previous;
 		}
