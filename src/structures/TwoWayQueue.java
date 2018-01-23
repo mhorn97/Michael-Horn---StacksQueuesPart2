@@ -107,6 +107,10 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		{
 			TwoWayNode secondHead = new TwoWayNode(head.getData(), head.getNext(), head);
 			head.setData(element);
+			if(head.next != null)
+			{
+				head.next.setPrevious(secondHead);
+			}
 			head.setNext(secondHead);
 		}
 	}
