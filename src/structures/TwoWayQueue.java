@@ -18,7 +18,7 @@ import exceptions.EmptyQueueException;
 
 /**
  * @author Michael Horn
- *
+ * @version 1.0
  */
 public class TwoWayQueue<T> implements ITwoWayQueue<T>
 {
@@ -121,16 +121,13 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		if (head.getData() == null)
 		{
 			head = new TwoWayNode(element, null, null);
-			System.out.println("head: " + head.getData());
 		} else
 		{
 			TwoWayNode current = head;
 			while (current.next != null)
 			{
-				System.out.println("Current: " + current.getData());
 				current = current.next;
 			}
-			System.out.println("DONE");
 			current.next = new TwoWayNode(element, null, null);
 		}
 		modCount++;
@@ -251,7 +248,6 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 
 		/**
 		 * Returns the data of the next node in the stack
-		 * 
 		 * @return the data in the next part of the stack
 		 */
 		@Override
@@ -272,7 +268,6 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 	
 	/**
 	 * Class that represents a node for linked list for the Stack class
-	 * 
 	 * @author Michael Horn
 	 * @version 1.0
 	 */
@@ -285,11 +280,8 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		/**
 		 * Stack Node object that contains data and a reference to the next node in the
 		 * linked list
-		 * 
-		 * @param data
-		 *            element that is unknown until the stack is created
-		 * @param next
-		 *            reference to the next node
+		 * @param data element that is unknown until the stack is created
+		 * @param next reference to the next node
 		 */
 		public TwoWayNode(T data, TwoWayNode next, TwoWayNode previous)
 		{
@@ -300,9 +292,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 
 		/**
 		 * Able to set the data of the node
-		 * 
-		 * @param element
-		 *            to be placed into the node
+		 * @param element to be placed into the node
 		 */
 		public void setData(T element)
 		{
@@ -312,8 +302,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		/**
 		 * Changes the reference of the node
 		 * 
-		 * @param the
-		 *            reference to a node
+		 * @param the reference to a node
 		 */
 		public void setNext(TwoWayNode next)
 		{
@@ -322,10 +311,8 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 
 		/**
 		 * Returns the reference to the next node
-		 * 
 		 * @return reference to next node
 		 */
-		
 		public void setPrevious(TwoWayNode previous)
 		{
 			this.previous = previous;
