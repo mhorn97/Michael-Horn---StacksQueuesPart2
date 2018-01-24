@@ -44,14 +44,18 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 			throw new EmptyQueueException();
 		}
 		
-		TwoWayNode current = head;
-		T returnElement = current.getData();
+		T returnElement = head.getData();
 		
-		
-		if(current.getNext() != null)
+		if(head.next != null)
 		{
-			current = current.next;
+			head.setData(head.getNext().getData());
+			head.setNext(head.getNext().getNext());
 		}
+		else 
+		{
+			head.setData(null);
+		}
+			
 		return returnElement;
 	}
 
@@ -67,7 +71,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 			throw new EmptyQueueException();
 		}
 
-		if (current.next == null)
+		if (head.next == null)
 		{
 			returnElement = head.getData();
 			head.setData(null);
@@ -76,15 +80,10 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		{
 			while (current.getNext().getNext() != null)
 			{
-				/*System.out.println(current.getData());
-				System.out.println(current.next.getData());
-				System.out.println(current.next.next.getData());
-				System.out.println("End Loop");*/
 				current = current.next;
 			}
-			System.out.println("End");
 
-			returnElement = current.next.getData();
+			returnElement = current.getNext().getData();
 			current.setNext(null);
 			return returnElement;
 		}
@@ -141,7 +140,8 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		if (head.getData() == null)
 		{
 			head = new TwoWayNode(element, null, null);
-		} else
+		}
+		else
 		{
 			TwoWayNode current = head;
 			while (current.getNext() != null)
