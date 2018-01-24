@@ -1,5 +1,5 @@
 /**
- * Michael Horn
+ * Michael Horn & Anthony Thompson
  * Jan 22, 2018
  * TwoWayQueue.java
  */
@@ -12,12 +12,8 @@ import java.util.List;
 
 import exceptions.EmptyQueueException;
 
-
-
-
-
 /**
- * @author Michael Horn
+ * @author Michael Horn & Anthony Thompson
  * @version 1.0
  */
 public class TwoWayQueue<T> implements ITwoWayQueue<T>
@@ -27,38 +23,53 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 	private int modCount;
 
 	/**
-	 * Stack stores a head object for itself which is null when initialized
+	 * The TwoWayQueue constructor stores a head object for itself which is null when initialized
 	 */
 	public TwoWayQueue()
 	{
 		this.head = new TwoWayNode(null, null, null);
 	}
-	
+
+	/**
+	 * Removes and returns the first element in the queue.
+	 *
+	 * @throws exceptions.EmptyQueueException
+	 *             if the queue is empty and dequeueFirst() is called
+	 * @return the first element
+	 * 				element in the queue
+	 */
 	@Override
 	public T dequeueFirst()
-	{	
+	{
 		modCount++;
-		
-		if(isEmpty())
+
+		if (isEmpty())
 		{
 			throw new EmptyQueueException();
 		}
-		
+
 		T returnElement = head.getData();
-		
-		if(head.next != null)
+
+		if (head.next != null)
 		{
 			head.setData(head.getNext().getData());
 			head.setNext(head.getNext().getNext());
-		}
-		else 
+		} else
 		{
 			head.setData(null);
 		}
-			
+
 		return returnElement;
 	}
 
+	/**
+	 * Removes and returns the last element in the queue.
+	 *
+	 * @throws exceptions.EmptyQueueException
+	 *             if the queue is empty and dequeueLast() is called
+	 * @return the last element
+	 * 				The last element in the queue
+	 */
 	@Override
 	public T dequeueLast()
 	{
@@ -89,21 +100,28 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		}
 	}
 
+	/**
+	 * Removes and returns all elements in the queue. The first element in the queue
+	 * should be located at the last index of the resulting list (index size() - 1)
+	 * and the last element in the queue at index zero.
+	 *
+	 * @return a list of all elements in the queue
+	 */
 	@Override
 	public List<T> dequeueAll()
 	{
 		modCount++;
-		if(isEmpty())
+		if (isEmpty())
 		{
 			throw new EmptyQueueException();
 		}
 		TwoWayNode tail = head;
 		ArrayList<T> list = new ArrayList<>();
-		while(tail.getNext() != null)
+		while (tail.getNext() != null)
 		{
 			tail = tail.next;
 		}
-		while(tail.getPrevious() != null)
+		while (tail.getPrevious() != null)
 		{
 			list.add(tail.getData());
 			tail = tail.previous;
@@ -114,6 +132,13 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		return list;
 	}
 
+	/**
+	 * Adds a new element to the front of the queue. The queue should continually
+	 * resize to make room for new elements.
+	 *
+	 * @param element
+	 *            the new element to be added to the front of the queue
+	 */
 	@Override
 	public void enqueueFirst(T element)
 	{
@@ -125,7 +150,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		{
 			TwoWayNode current = new TwoWayNode(head.getData(), head.next, head);
 			head.setData(element);
-			if(head.next != null)
+			if (head.next != null)
 			{
 				head.next.setPrevious(current);
 			}
@@ -133,6 +158,13 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		}
 	}
 
+	/**
+	 * Adds a new element to the end of the queue. The queue should continually
+	 * resize to make room for new elements.
+	 *
+	 * @param element
+	 *            the new element to be added to then end of the queue
+	 */
 	@Override
 	public void enqueueLast(T element)
 	{
@@ -140,8 +172,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		if (head.getData() == null)
 		{
 			head = new TwoWayNode(element, null, null);
-		}
-		else
+		} else
 		{
 			TwoWayNode current = head;
 			while (current.getNext() != null)
@@ -152,6 +183,12 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		}
 	}
 
+	/**
+	 * Adds a group of elements to the front of the queue.
+	 *
+	 * @param elements
+	 *            an array of elements to be added to the beginning of the queue
+	 */
 	@Override
 	public void enqueueAllFirst(T[] elements)
 	{
@@ -160,9 +197,15 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 			enqueueFirst(element);
 		}
 		modCount++;
-		
+
 	}
 
+	/**
+	 * Adds a group of elements to the end of the queue.
+	 *
+	 * @param elements
+	 *            an array of elements to be added to the end of the queue
+	 */
 	@Override
 	public void enqueueAllLast(T[] elements)
 	{
@@ -171,34 +214,44 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 			enqueueLast(element);
 		}
 		modCount++;
-		
+
 	}
 
+	/**
+	 * Returns the number of elements in the queue.
+	 *
+	 * @return the number of elements in the queue
+	 */
 	@Override
 	public int size()
 	{
 		int counter = 0;
 		TwoWayNode current = head;
-		
+
 		if (head.getData() == null)
 		{
 			return 0;
 		}
-		
+
 		if (current.getData() != null)
 		{
 			counter++;
 		}
-		
+
 		while (current.next != null)
 		{
 			current = current.next;
 			counter++;
 		}
-		
+
 		return counter;
 	}
 
+	/**
+	 * Reports whether the queue is empty or not.
+	 *
+	 * @return true if no elements are in the queue, otherwise returns false
+	 */
 	@Override
 	public boolean isEmpty()
 	{
@@ -211,26 +264,39 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		}
 	}
 
+	/**
+	 * Removes all elements from the queue. Sets the head to null
+	 */
 	@Override
 	public void clear()
 	{
 		modCount++;
 		head.setData(null);
 		head.setNext(null);
-		
+
 	}
 
+	/**
+	 * Returns an iterator over the elements of the queue. It should not be possible
+	 * to use the iterator while making any changes to the stack itself.
+	 *
+	 * Elements should return in FIFO order (i.e. The first element added should be
+	 * the first returned by the iterator. The last element added should be the last
+	 * returned by the iterator.)
+	 *
+	 * @return an object using the Iterator<T> interface
+	 */
 	@Override
 	public Iterator<T> iterator()
 	{
 		TwoWayNode tail = head;
-		while(tail.next != null)
+		while (tail.next != null)
 		{
 			tail = tail.next;
 		}
 		return new TwoWayQueueIterator(tail, modCount);
 	}
-	
+
 	private class TwoWayQueueIterator implements Iterator<T>
 	{
 
@@ -238,9 +304,12 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		int savedModCount;
 
 		/**
-		 * Stack iterator object that keeps track of its own head node
-		 * @param head node that is the start of the linked list
-		 * @param savedModCount the count of times the linked list was manipulated
+		 * TwoWayQueue iterator object that keeps track of its own head node
+		 * 
+		 * @param head
+		 *            node that is the start of the queue
+		 * @param savedModCount
+		 *            the count of times the queue was manipulated
 		 */
 		public TwoWayQueueIterator(TwoWayNode tail, int savedModCount)
 		{
@@ -249,8 +318,9 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		}
 
 		/**
-		 * Checks if the stack has a next iteration by checking if the next node has
+		 * Checks if the stack has the next iteration by checking if the next node has
 		 * data or not
+		 * 
 		 * @return if the iterator can do the next method again
 		 */
 		@Override
@@ -260,7 +330,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 			{
 				throw new ConcurrentModificationException();
 			}
-			
+
 			if (tail.getData() == null)
 			{
 				return false;
@@ -272,6 +342,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 
 		/**
 		 * Returns the data of the next node in the stack
+		 * 
 		 * @return the data in the next part of the stack
 		 */
 		@Override
@@ -281,17 +352,17 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 			{
 				throw new ConcurrentModificationException();
 			}
-			
+
 			T data = tail.getData();
 			tail = tail.previous;
 			return data;
 		}
 
 	}
-	
-	
+
 	/**
 	 * Class that represents a node for linked list for the Stack class
+	 * 
 	 * @author Michael Horn
 	 * @version 1.0
 	 */
@@ -304,8 +375,11 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		/**
 		 * Stack Node object that contains data and a reference to the next node in the
 		 * linked list
-		 * @param data element that is unknown until the stack is created
-		 * @param next reference to the next node
+		 * 
+		 * @param data
+		 *            element that is unknown until the stack is created
+		 * @param next
+		 *            reference to the next node
 		 */
 		public TwoWayNode(T data, TwoWayNode next, TwoWayNode previous)
 		{
@@ -316,7 +390,9 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 
 		/**
 		 * Able to set the data of the node
-		 * @param element to be placed into the node
+		 * 
+		 * @param element
+		 *            to be placed into the node
 		 */
 		public void setData(T element)
 		{
@@ -325,7 +401,9 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 
 		/**
 		 * Changes the reference of the node
-		 * @param the reference to a node
+		 * 
+		 * @param the
+		 *            reference to a node
 		 */
 		public void setNext(TwoWayNode next)
 		{
@@ -334,18 +412,19 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 
 		/**
 		 * Returns the reference to the next node
+		 * 
 		 * @return reference to next node
 		 */
 		public void setPrevious(TwoWayNode previous)
 		{
 			this.previous = previous;
 		}
-		
+
 		public TwoWayNode getPrevious()
 		{
 			return previous;
 		}
-		
+
 		public TwoWayNode getNext()
 		{
 			return next;
@@ -371,6 +450,5 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 			return data.toString();
 		}
 	}
-
 
 }
