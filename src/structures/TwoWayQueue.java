@@ -37,16 +37,22 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 	@Override
 	public T dequeueFirst()
 	{	
+		modCount++;
+		
 		if(isEmpty())
 		{
 			throw new EmptyQueueException();
 		}
-		T current = head.getData();
-		if(head.getNext() != null)
+		
+		TwoWayNode current = head;
+		T returnElement = current.getData();
+		
+		
+		if(current.getNext() != null)
 		{
-			head = head.next;
+			current = current.next;
 		}
-		return current;
+		return returnElement;
 	}
 
 	@Override
@@ -68,10 +74,15 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 			return returnElement;
 		} else
 		{
-			while (current.next.getNext() != null)
+			while (current.getNext().getNext() != null)
 			{
+				/*System.out.println(current.getData());
+				System.out.println(current.next.getData());
+				System.out.println(current.next.next.getData());
+				System.out.println("End Loop");*/
 				current = current.next;
 			}
+			System.out.println("End");
 
 			returnElement = current.next.getData();
 			current.setNext(null);
@@ -82,56 +93,63 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 	@Override
 	public List<T> dequeueAll()
 	{
+		modCount++;
 		if(isEmpty())
 		{
 			throw new EmptyQueueException();
 		}
-		TwoWayNode current = head;
+		TwoWayNode tail = head;
 		ArrayList<T> list = new ArrayList<>();
-		while(current.getNext() != null)
+		while(tail.getNext() != null)
 		{
-			list.add(current.getData());
-			current = current.next;
+			tail = tail.next;
 		}
-		head = new TwoWayNode(null,null,null);
+		while(tail.getPrevious() != null)
+		{
+			list.add(tail.getData());
+			tail = tail.previous;
+		}
+		list.add(head.getData());
+		head.setData(null);
+		head.setNext(null);
 		return list;
 	}
 
 	@Override
 	public void enqueueFirst(T element)
 	{
+		modCount++;
 		if (head.getData() == null)
 		{
 			head = new TwoWayNode(element, null, null);
 		} else
 		{
-			TwoWayNode secondHead = new TwoWayNode(head.getData(), head.getNext(), head);
+			TwoWayNode current = new TwoWayNode(head.getData(), head.next, head);
 			head.setData(element);
 			if(head.next != null)
 			{
-				head.next.setPrevious(secondHead);
+				head.next.setPrevious(current);
 			}
-			head.setNext(secondHead);
+			head.setNext(current);
 		}
 	}
 
 	@Override
 	public void enqueueLast(T element)
 	{
+		modCount++;
 		if (head.getData() == null)
 		{
 			head = new TwoWayNode(element, null, null);
 		} else
 		{
 			TwoWayNode current = head;
-			while (current.next != null)
+			while (current.getNext() != null)
 			{
 				current = current.next;
 			}
-			current.next = new TwoWayNode(element, null, null);
+			current.next = new TwoWayNode(element, null, current);
 		}
-		modCount++;
-		
 	}
 
 	@Override
@@ -196,6 +214,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 	@Override
 	public void clear()
 	{
+		modCount++;
 		head.setData(null);
 		head.setNext(null);
 		
@@ -204,13 +223,18 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 	@Override
 	public Iterator<T> iterator()
 	{
-		return new TwoWayQueueIterator(head, modCount);
+		TwoWayNode tail = head;
+		while(tail.next != null)
+		{
+			tail = tail.next;
+		}
+		return new TwoWayQueueIterator(tail, modCount);
 	}
 	
 	private class TwoWayQueueIterator implements Iterator<T>
 	{
 
-		TwoWayNode head;
+		TwoWayNode tail;
 		int savedModCount;
 
 		/**
@@ -218,10 +242,10 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		 * @param head node that is the start of the linked list
 		 * @param savedModCount the count of times the linked list was manipulated
 		 */
-		public TwoWayQueueIterator(TwoWayNode head, int savedModCount)
+		public TwoWayQueueIterator(TwoWayNode tail, int savedModCount)
 		{
 			this.savedModCount = savedModCount;
-			this.head = head;
+			this.tail = tail;
 		}
 
 		/**
@@ -237,12 +261,12 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 				throw new ConcurrentModificationException();
 			}
 			
-			if (head.getData() == null)
+			if (tail.getData() == null)
 			{
 				return false;
 			} else
 			{
-				return head.getNext() != null;
+				return tail.getPrevious() != null;
 			}
 		}
 
@@ -258,8 +282,8 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 				throw new ConcurrentModificationException();
 			}
 			
-			T data = head.getData();
-			head = head.next;
+			T data = tail.getData();
+			tail = tail.previous;
 			return data;
 		}
 
@@ -301,7 +325,6 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 
 		/**
 		 * Changes the reference of the node
-		 * 
 		 * @param the reference to a node
 		 */
 		public void setNext(TwoWayNode next)
