@@ -361,9 +361,9 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 	}
 
 	/**
-	 * Class that represents a node for linked list for the Stack class
+	 * Class that represents a node for the queue for the TwoWayQueue class
 	 * 
-	 * @author Michael Horn
+	 * @author Michael Horn & Anthony Thompson
 	 * @version 1.0
 	 */
 	private class TwoWayNode
@@ -373,13 +373,15 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		public TwoWayNode previous;
 
 		/**
-		 * Stack Node object that contains data and a reference to the next node in the
-		 * linked list
+		 * TwoWayQueue Node object that contains data, a reference to next node, and a reference to the 
+		 * previous node in the queue
 		 * 
 		 * @param data
 		 *            element that is unknown until the stack is created
 		 * @param next
-		 *            reference to the next node
+		 *            reference to the next node in the queue
+		 * @param previous
+		 * 			  reference to the previous node in the queue
 		 */
 		public TwoWayNode(T data, TwoWayNode next, TwoWayNode previous)
 		{
@@ -389,7 +391,7 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		}
 
 		/**
-		 * Able to set the data of the node
+		 * Sets the data of the node
 		 * 
 		 * @param element
 		 *            to be placed into the node
@@ -400,10 +402,10 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		}
 
 		/**
-		 * Changes the reference of the node
+		 * Changes the reference of the node next in queue
 		 * 
 		 * @param the
-		 *            reference to a node
+		 *            reference to the node next in queue
 		 */
 		public void setNext(TwoWayNode next)
 		{
@@ -411,20 +413,28 @@ public class TwoWayQueue<T> implements ITwoWayQueue<T>
 		}
 
 		/**
-		 * Returns the reference to the next node
+		 * Sets the previous node reference of the current node
 		 * 
-		 * @return reference to next node
+		 * @param The reference to the node previous in the queue
 		 */
 		public void setPrevious(TwoWayNode previous)
 		{
 			this.previous = previous;
 		}
 
+		/**
+		 * Gets the previous node within the current nodes references
+		 * @return node that is previous in the queue
+		 */
 		public TwoWayNode getPrevious()
 		{
 			return previous;
 		}
 
+		/**
+		 * Gets the next node within the current nodes references
+		 * @return node that is next in the queue
+		 */
 		public TwoWayNode getNext()
 		{
 			return next;
